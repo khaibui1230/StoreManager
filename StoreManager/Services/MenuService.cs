@@ -2,7 +2,7 @@
 using StoreManager.Data.UnitOfWork;
 using StoreManager.Model;
 
-namespace StoreManager.DTOs.Services
+namespace StoreManager.Services
 {
     public class MenuService : IMenuService
     {

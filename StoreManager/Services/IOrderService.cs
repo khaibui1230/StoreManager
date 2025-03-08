@@ -1,6 +1,6 @@
 ﻿using StoreManager.Model;
 
-namespace StoreManager.DTOs.Services
+namespace StoreManager.Services
 {
     public interface IOrderService
     {
