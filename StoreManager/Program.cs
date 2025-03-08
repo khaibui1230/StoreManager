@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using StoreManager.Configurations;
 using StoreManager.Data;
 using StoreManager.Data.Repositories;
 using StoreManager.Data.UnitOfWork;
@@ -20,7 +21,7 @@ builder.Services.AddDbContext<RestaurantDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //register the autoMapper
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 //register the Unit of work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

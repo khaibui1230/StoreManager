@@ -36,8 +36,8 @@ namespace StoreManager.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateMenuItem(MenuItemDto menuItemDto)
         {
-            await menuService.AddMenuItemAsync(menuItemDto);
-            return CreatedAtAction(nameof(GetMenu), new { id = menuItemDto.Id }, menuItemDto);
+            var createdMenuItem = await menuService.AddMenuItemAsync(menuItemDto);
+
         }
     }
 }
