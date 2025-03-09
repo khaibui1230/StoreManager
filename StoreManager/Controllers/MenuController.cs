@@ -37,7 +37,9 @@ namespace StoreManager.Controllers
         public async Task<ActionResult> CreateMenuItem(MenuItemDto menuItemDto)
         {
             var createdMenuItem = await menuService.AddMenuItemAsync(menuItemDto);
+            return CreatedAtAction(nameof(GetMenuItem), new { id = createdMenuItem.Id }, createdMenuItem);
 
         }
+        
     }
 }

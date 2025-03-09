@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StoreManager.Data.UnitOfWork;
+using StoreManager.DTOs;
 using StoreManager.Model;
 
 namespace StoreManager.Services
@@ -14,39 +15,43 @@ namespace StoreManager.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task AddMenuItemAsync(MenuItem menuItem)
+
+        public async Task<MenuItemDto> AddMenuItemAsync(MenuItemDto menuItemDto)
         {
-            var menuItemEntity = _mapper.Map<MenuItem>(menuItem);
-            await _unitOfWork.MenuRepository.AddAsync(menuItemEntity);
+            // trans the menuItemDto to MenuItem
+            var menuItem = _mapper.Map<MenuItem>(menuItemDto);
+            // add the menuItem to the database
+            await _unitOfWork.MenuRepository.AddAsync(menuItem);
+            await _unitOfWork.SaveAsync();
+            // trang the meuItem to menuItemDto
+            return _mapper.Map<MenuItemDto>(menuItem);
+
         }
 
-        public async Task DeleteMenuItemAsync(int id)
+        public Task<bool> DeleteMenuItemAsync(int id)
         {
-            var menuItem = _unitOfWork.MenuRepository.GetByIdAsync(id);
+            throw new NotImplementedException();
+        }
+        // get all the food items
+        public async Task<IEnumerable<MenuItemDto>> GetAllAsync()
+        {
+            var menuItems = await _unitOfWork.MenuRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<MenuItemDto>>(menuItems);
+        }
+
+        public async Task<MenuItemDto?> GetMenuItemByIdAsync(int id)
+        {
+            var menuItem = await _unitOfWork.MenuRepository.GetByIdAsync(id);
             if (menuItem == null)
             {
-                throw new Exception("Menu item not found");
+                return null;
             }
-            else
-            {
-                await _unitOfWork.MenuRepository.DeleteAsync(id);
-            }
+            return _mapper.Map<MenuItemDto>(menuItem);
         }
 
-        public async Task<IEnumerable<MenuItem>> GetAllAsync()
+        public Task<bool> UpdateMenuItemAsync(int id, MenuItemDto menuItemDto)
         {
-            return await _unitOfWork.MenuRepository.GetAllAsync();
-        }
-
-        public Task<MenuItem?> GetMenuItemByIdAsync(int id)
-        {
-            return _unitOfWork.MenuRepository.GetByIdAsync(id);
-        }
-
-        public async Task UpdateMenuItemAsync(MenuItem menuItem)
-        {
-            var menuItemEntity = _mapper.Map<MenuItem>(menuItem);
-            await _unitOfWork.MenuRepository.UpdateAsync(menuItemEntity);
+            throw new NotImplementedException();
         }
     }
 }
