@@ -40,6 +40,29 @@ namespace StoreManager.Controllers
             return CreatedAtAction(nameof(GetMenuItem), new { id = createdMenuItem.Id }, createdMenuItem);
 
         }
-        
+
+        // PUT: api/menu/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateMenuItem(int id, MenuItemDto menuItemDto)
+        {
+            var updatedItem = await menuService.UpdateMenuItemAsync(id, menuItemDto);
+            if (updatedItem==null)
+            {
+                return NotFound();
+            }
+            return Ok(updatedItem);
+        }
+        //DELETE: api/menu/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMenuItem(int id)
+        {
+            var deleted = await menuService.DeleteMenuItemAsync(id);
+            if (!deleted)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
     }
 }

@@ -28,9 +28,18 @@ namespace StoreManager.Services
 
         }
 
-        public Task<bool> DeleteMenuItemAsync(int id)
+        public async Task<bool> DeleteMenuItemAsync(int id)
         {
-            throw new NotImplementedException();
+            var menuItem = await _unitOfWork.MenuRepository.GetByIdAsync(id);
+            if (menuItem == null)
+            {
+                return false;
+            }
+            await _unitOfWork.MenuRepository.DeleteAsync(id); // delete the menuItem    
+            await _unitOfWork.SaveAsync();
+            return true;
+
+
         }
         // get all the food items
         public async Task<IEnumerable<MenuItemDto>> GetAllAsync()
@@ -49,9 +58,20 @@ namespace StoreManager.Services
             return _mapper.Map<MenuItemDto>(menuItem);
         }
 
-        public Task<bool> UpdateMenuItemAsync(int id, MenuItemDto menuItemDto)
+        public async Task<MenuItemDto> UpdateMenuItemAsync(int id, MenuItemDto menuItemDto)
         {
-            throw new NotImplementedException();
+            // check the food is exist or not
+            var menuItemExist = await _unitOfWork.MenuRepository.GetByIdAsync(id);
+            if (menuItemExist == null)
+            {
+                return null;
+            }
+            // trans the data from menuItemDto to menuItem
+            _mapper.Map(menuItemDto, menuItemExist);
+            await _unitOfWork.MenuRepository.UpdateAsync(menuItemExist);
+            await _unitOfWork.SaveAsync();
+            // return the DTO of the menuItem has updated
+            return _mapper.Map<MenuItemDto>(menuItemExist);
         }
     }
 }

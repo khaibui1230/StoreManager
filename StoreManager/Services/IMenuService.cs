@@ -8,7 +8,7 @@ namespace StoreManager.Services
         Task<IEnumerable<MenuItemDto>> GetAllAsync();
         Task<MenuItemDto?> GetMenuItemByIdAsync(int id);
         Task<MenuItemDto> AddMenuItemAsync(MenuItemDto menuItemDto);
-        Task<bool> UpdateMenuItemAsync(int id, MenuItemDto menuItemDto);
+        Task<MenuItemDto> UpdateMenuItemAsync(int id, MenuItemDto menuItemDto);
         Task<bool> DeleteMenuItemAsync(int id);
     }
 
