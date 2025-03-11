@@ -30,16 +30,17 @@ namespace StoreManager.Services
             return staffDto;
         }
 
-        public Task DeleteStaffAsync(int id)
+        public async Task<bool> DeleteStaffAsync(int id)
         {
-            var Staff = _unitOfWork.StaffRepository.GetByIdAsync(id);
+            var Staff = await _unitOfWork.StaffRepository.GetByIdAsync(id);
             if (Staff == null)
             {
-                throw new Exception("Staff not found");
+                return false;
             }
             else
             {
-                return _unitOfWork.StaffRepository.DeleteAsync(id);
+                await _unitOfWork.StaffRepository.DeleteAsync(id);
+                return true;
             }
         }
 

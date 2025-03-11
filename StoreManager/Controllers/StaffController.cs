@@ -67,5 +67,21 @@ namespace StoreManager.Controllers
 
             return NoContent();
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStaffAsync(int id)
+        {
+            var deletedStaff = await staffService.DeleteStaffAsync(id);
+            if (!deletedStaff)
+            {
+                var staff = await staffService.GetStaffByIdAsync(id);
+                if (staff ==null)
+                {
+                    return NotFound(new { message = $"Staff with ID {id} not found" });
+                }
+                return BadRequest(new { message = $"Staff with ID {id} cannot be deleted due to existing orders" });
+            }
+
+            return NoContent();
+        }
     }
 }

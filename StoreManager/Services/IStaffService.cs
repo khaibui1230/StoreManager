@@ -9,6 +9,6 @@ namespace StoreManager.Services
         Task<StaffDto> GetStaffByIdAsync(int id);
         Task<StaffDto> AddStaffAsync(StaffDto staff);
         Task<StaffDto> UpdateStaffAsync(StaffDto staffDto);
-        Task DeleteStaffAsync(int id);
+        Task<bool> DeleteStaffAsync(int id);
     }
 }
