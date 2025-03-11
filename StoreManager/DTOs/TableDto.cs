@@ -10,6 +10,6 @@ namespace StoreManager.DTOs
         public int Number { get; set; } // number of the table
         [Required]
         [Range(0,2)]
-        public int Status { get; set; } // 0: empty, 1: reserved, 2: occupied
+        public string Status { get; set; } // 0: empty, 1: reserved, 2: occupied
     }
 }

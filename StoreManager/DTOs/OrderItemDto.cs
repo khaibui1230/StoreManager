@@ -5,10 +5,9 @@ namespace StoreManager.DTOs
     public class OrderItemDto
     {
         public int Id { get; set; }
-        [Required]
         public int MenuItemId { get; set; }
-        [Required]
-        [Range(1, 100)]
+        public string MenuItemName { get; set; } // Để hiển thị thông tin
         public int Quantity { get; set; }
+        public decimal Price { get; set; }
     }
 }

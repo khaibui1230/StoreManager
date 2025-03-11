@@ -1,11 +1,19 @@
-﻿namespace StoreManager.Model
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace StoreManager.Model
 {
+    [Table("Orders")]
     public class Order
     {
         public int Id { get; set; }
-        public DateTime OrderTime { get; set; }
-        public decimal TotalPrice { get; set; }
-        public List<OrderItem> OrderItems { get; set; }
+        public int TableId { get; set; }
+        public Table Table { get; set; } // Liên kết với bảng Table
+        public int StaffId { get; set; }
+        public Staff Staff { get; set; } // Liên kết với bảng Staff
+        public DateTime OrderDate { get; set; }
+        public decimal TotalAmount { get; set; }
+        public string Status { get; set; } // Ví dụ: "Pending", "Completed", "Cancelled"
+        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
-
 }

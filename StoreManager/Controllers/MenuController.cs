@@ -20,7 +20,12 @@ namespace StoreManager.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MenuItem>>> GetMenu ()
         {
-            return Ok(await menuService.GetAllAsync());
+            var menuItems = await menuService.GetAllAsync();
+            if (menuItems == null || !menuItems.Any())
+            {
+                return NotFound("No menu items found.");
+            }
+            return Ok(menuItems);
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<MenuItem>> GetMenuItem(int id)
@@ -36,7 +41,15 @@ namespace StoreManager.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateMenuItem(MenuItemDto menuItemDto)
         {
+            if (menuItemDto == null)
+            {
+                return BadRequest("Menu item data is required.");
+            }
             var createdMenuItem = await menuService.AddMenuItemAsync(menuItemDto);
+            if (createdMenuItem == null)
+            {
+                return BadRequest("Failed to create menu item.");
+            }
             return CreatedAtAction(nameof(GetMenuItem), new { id = createdMenuItem.Id }, createdMenuItem);
 
         }
@@ -45,10 +58,18 @@ namespace StoreManager.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMenuItem(int id, MenuItemDto menuItemDto)
         {
-            var updatedItem = await menuService.UpdateMenuItemAsync(id, menuItemDto);
-            if (updatedItem==null)
+            if (menuItemDto == null)
             {
-                return NotFound();
+                return BadRequest("Menu item data is required.");
+            }
+            if (id != menuItemDto.Id)
+            {
+                return BadRequest("Menu item Id in URL does not match the Id in the request body.");
+            }
+            var updatedItem = await menuService.UpdateMenuItemAsync(id, menuItemDto);
+            if (updatedItem == null)
+            {
+                return NotFound($"Menu item with ID {id} not found.");
             }
             return Ok(updatedItem);
         }

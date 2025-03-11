@@ -1,13 +1,10 @@
-﻿using StoreManager.Model;
+﻿using StoreManager.DTOs;
 
-namespace StoreManager.Services
+public interface IOrderService
 {
-    public interface IOrderService
-    {
-        Task<IEnumerable<Order>> GetAllAsync();
-        Task<Order?> GetOrderByIdAsync(int id);
-        Task AddOrderAsync(Order order);
-        Task UpdateOrderAsync(Order order);
-        Task DeleteOrderAsync(int id);
-    }
+    Task<IEnumerable<OrderDto>> GetAllOrdersAsync();
+    Task<OrderDto> GetOrderByIdAsync(int id);
+    Task<OrderDto> CreateOrderAsync(OrderDto orderDto);
+    Task UpdateOrderAsync(int id, OrderDto orderDto);
+    Task DeleteOrderAsync(int id);
 }
