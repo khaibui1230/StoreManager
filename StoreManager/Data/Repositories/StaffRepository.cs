@@ -33,7 +33,13 @@ namespace StoreManager.Data.Repositories
 
         public async Task UpdateAsync(Staff staff)
         {
-            dbContext.Staffs.Update(staff);
+            var existingStaff = await dbContext.Staffs.FindAsync(staff.Id);
+            if (existingStaff == null)
+            {
+                throw new Exception("Staff not found");
+            }
+            existingStaff.Name = staff.Name;
+            existingStaff.Role = staff.Role;
             await dbContext.SaveChangesAsync();
         }
     }

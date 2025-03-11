@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StoreManager.Data.UnitOfWork;
+using StoreManager.DTOs;
 using StoreManager.Model;
 
 namespace StoreManager.Services
@@ -15,10 +16,18 @@ namespace StoreManager.Services
             _mapper = mapper;
         }
 
-        public Task AddStaffAsync(Staff Staff)
+
+
+        public async Task<StaffDto> AddStaffAsync(StaffDto staffDto)
         {
-            var StaffEntity = _mapper.Map<Staff>(Staff);
-            return _unitOfWork.StaffRepository.AddAsync(StaffEntity);
+            var staff = new Staff
+            {
+                Name = staffDto.Name,
+                Role = staffDto.Role
+            };
+            await _unitOfWork.StaffRepository.AddAsync(staff);
+            staffDto.Id = staff.Id; // Đảm bảo Id được gán sau khi lưu
+            return staffDto;
         }
 
         public Task DeleteStaffAsync(int id)
@@ -34,20 +43,32 @@ namespace StoreManager.Services
             }
         }
 
-        public async Task<IEnumerable<Staff>> GetAllAsync()
+        public async Task<IEnumerable<Staff>> GetAllStaffsAsync()
         {
             return await _unitOfWork.StaffRepository.GetAllAsync();
         }
 
-        public async Task<Staff?> GetStaffByIdAsync(int id)
+        public async Task<StaffDto> GetStaffByIdAsync(int id)
         {
-            return await _unitOfWork.StaffRepository.GetByIdAsync(id);
+            var staffEntity = await _unitOfWork.StaffRepository.GetByIdAsync(id);
+            if (staffEntity == null)
+            {
+                return null;
+            }
+            return _mapper.Map<StaffDto>(staffEntity);
         }
 
-        public Task UpdateStaffAsync(Staff Staff)
+        public async Task<StaffDto> UpdateStaffAsync(StaffDto staffDto)
         {
-            var StaffEntity = _mapper.Map<Staff>(Staff);
-            return _unitOfWork.StaffRepository.UpdateAsync(StaffEntity);
+            var staffEntity = _mapper.Map<Staff>(staffDto);
+            if (staffEntity == null)
+            {
+                return null;
+            }
+            staffEntity.Name = staffDto.Name;
+            staffEntity.Role = staffDto.Role;
+            await _unitOfWork.StaffRepository.UpdateAsync(staffEntity);
+            return staffDto;
         }
     }
 }

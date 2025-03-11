@@ -1,13 +1,14 @@
-﻿using StoreManager.Model;
+﻿using StoreManager.DTOs;
+using StoreManager.Model;
 
 namespace StoreManager.Services
 {
     public interface IStaffService
     {
-        Task<IEnumerable<Staff>> GetAllAsync();
-        Task<Staff?> GetStaffByIdAsync(int id);
-        Task AddStaffAsync(Staff staff);
-        Task UpdateStaffAsync(Staff staff);
+        Task<IEnumerable<Staff>> GetAllStaffsAsync();
+        Task<StaffDto> GetStaffByIdAsync(int id);
+        Task<StaffDto> AddStaffAsync(StaffDto staff);
+        Task<StaffDto> UpdateStaffAsync(StaffDto staffDto);
         Task DeleteStaffAsync(int id);
     }
 }

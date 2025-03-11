@@ -28,13 +28,18 @@ namespace StoreManager.Data
                 .HasForeignKey(o => o.TableId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity< Order > ()
+                .HasOne(o => o.Staff)
+                .WithMany()
+                .HasForeignKey(o => o.StaffId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<OrderItem>()
                 .HasOne(oi => oi.MenuItem)
                 .WithMany()
                 .HasForeignKey(oi => oi.MenuItemId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            // Không cần HasConversion<int>() vì Status giờ là string
+            
 
             // Seed data
             SeedData(modelBuilder);
