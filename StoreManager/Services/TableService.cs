@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StoreManager.Data.UnitOfWork;
+using StoreManager.DTOs;
 using StoreManager.Model;
 
 namespace StoreManager.Services
@@ -15,39 +16,60 @@ namespace StoreManager.Services
             _mapper = mapper;
         }
 
-        public Task AddTableAsync(Table Table)
+        public async Task<TableDto> AddTableAsync(TableDto tableDto)
         {
-            var TableEntity = _mapper.Map<Table>(Table);
-            return _unitOfWork.TableRepository.AddAsync(TableEntity);
+            var TableEntity = _mapper.Map<Table>(tableDto);
+            await _unitOfWork.TableRepository.AddAsync(TableEntity);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<TableDto>(TableEntity);
+            
         }
 
-        public Task DeleteTableAsync(int id)
+        public Task<TableDto> AddTableAsync(Table table)
         {
-            var Table = _unitOfWork.TableRepository.GetByIdAsync(id);
-            if (Table == null)
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> DeleteTableAsync(int id)
+        {
+            var existingTable = await _unitOfWork.TableRepository.GetByIdAsync(id);
+            if (existingTable == null)
             {
-                throw new Exception("Table not found");
+                return false;
             }
-            else
+            await _unitOfWork.TableRepository.DeleteAsync(id);
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
+
+        public async Task<IEnumerable<TableDto>> GetAllTableAsync()
+        {
+            var tables = await _unitOfWork.TableRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<TableDto>>(tables);
+        }
+
+        public async Task<TableDto> GetTableByIdAsync(int id)
+        {
+            var table = await _unitOfWork.TableRepository.GetByIdAsync(id);
+            return _mapper.Map<TableDto>(table);
+        }
+
+        
+        //use the Get-Update-Save pattern
+        public async Task<TableDto> UpdateTableAsync(TableDto tableDto)
+        {
+            //Get 
+            var existingTable = await _unitOfWork.TableRepository.GetByIdAsync(tableDto.Id);
+            if (existingTable == null)
             {
-                return _unitOfWork.TableRepository.DeleteAsync(id);
+                return null;
             }
-        }
-
-        public async Task<IEnumerable<Table>> GetAllAsync()
-        {
-            return await _unitOfWork.TableRepository.GetAllAsync();
-        }
-
-        public async Task<Table?> GetTableByIdAsync(int id)
-        {
-            return await _unitOfWork.TableRepository.GetByIdAsync(id);
-        }
-
-        public Task UpdateTableAsync(Table Table)
-        {
-            var TableEntity = _mapper.Map<Table>(Table);
-            return _unitOfWork.TableRepository.UpdateAsync(TableEntity);
-        }
+            //Update
+            _mapper.Map(tableDto, existingTable); // Cập nhật các thuộc tính từ DTO vào entity
+            //Save
+            await _unitOfWork.TableRepository.UpdateAsync(existingTable);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<TableDto>(existingTable);
+        }         
     }
 }

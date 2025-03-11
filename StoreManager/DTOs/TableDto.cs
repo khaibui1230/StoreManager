@@ -8,8 +8,8 @@ namespace StoreManager.DTOs
         [Required]
         [Range(1, 100)]
         public int Number { get; set; } // number of the table
-        [Required]
-        [Range(0,2)]
-        public string Status { get; set; } // 0: empty, 1: reserved, 2: occupied
+        [Required(ErrorMessage = "Status is required")]
+        [RegularExpression("Available|Occupied|Reserved", ErrorMessage = "Status must be Available, Occupied, or Reserved")]
+        public string Status { get; set; }
     }
 }

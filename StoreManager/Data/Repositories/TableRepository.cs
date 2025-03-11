@@ -34,8 +34,18 @@ namespace StoreManager.Data.Repositories
 
         public async Task UpdateAsync(Table table)
         {
-            dbContext.Tables.Update(table);
-            await dbContext.SaveChangesAsync();
+            //fix the update method follow get- update- save    
+            var existingTable = await dbContext.Tables.FindAsync(table.Id);
+            if (existingTable != null)
+            {
+                existingTable.Number = table.Number;
+                existingTable.Status = table.Status;
+                await dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Table not found");
+            }
         }
     }
 }

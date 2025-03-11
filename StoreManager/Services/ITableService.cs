@@ -1,13 +1,14 @@
-﻿using StoreManager.Model;
+﻿using StoreManager.DTOs;
+using StoreManager.Model;
 
 namespace StoreManager.Services
 {
     public interface ITableService
     {
-        Task<IEnumerable<Table>> GetAllAsync();
-        Task<Table?> GetTableByIdAsync(int id);
-        Task AddTableAsync(Table table);
-        Task UpdateTableAsync(Table table);
-        Task DeleteTableAsync(int id);
+        Task<IEnumerable<TableDto>> GetAllTableAsync();
+        Task<TableDto> GetTableByIdAsync(int id);
+        Task<TableDto> AddTableAsync(TableDto table);
+        Task<TableDto> UpdateTableAsync(TableDto table);
+        Task<bool> DeleteTableAsync(int id);
     }
 }
