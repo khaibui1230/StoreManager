@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using StoreManager.Data.UnitOfWork;
 using StoreManager.DTOs;
+using StoreManager.Hubs;
 using StoreManager.Model;
 
 namespace StoreManager.Services
@@ -9,11 +11,13 @@ namespace StoreManager.Services
     {
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
+        private readonly IHubContext<StoreHub> _hubContext;
 
-        public TableService(IUnitOfWork unitOfWork, IMapper mapper)
+        public TableService(IUnitOfWork unitOfWork, IMapper mapper,IHubContext<StoreHub> hubContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _hubContext = hubContext;
         }
 
         public async Task<TableDto> AddTableAsync(TableDto tableDto)
@@ -69,6 +73,9 @@ namespace StoreManager.Services
             //Save
             await _unitOfWork.TableRepository.UpdateAsync(existingTable);
             await _unitOfWork.SaveAsync();
+            //send message to all clients
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate", "Table has been updated");
+
             return _mapper.Map<TableDto>(existingTable);
         }         
     }

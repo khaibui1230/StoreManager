@@ -33,7 +33,7 @@ public class OrdersController : ControllerBase
     public async Task<IActionResult> Create([FromBody] OrderDto orderDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        var createdOrder = await _orderService.CreateOrderAsync(orderDto);
+        var createdOrder = await _orderService.AddOrderAsync(orderDto);
         return CreatedAtAction(nameof(GetById), new { id = createdOrder.Id }, createdOrder);
     }
 

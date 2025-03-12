@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using StoreManager.Data.UnitOfWork;
 using StoreManager.DTOs;
+using StoreManager.Hubs;
 using StoreManager.Model;
 
 namespace StoreManager.Services
@@ -9,11 +11,13 @@ namespace StoreManager.Services
     {
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
+        private readonly IHubContext<StoreHub> _hubContext;
 
-        public StaffService(IUnitOfWork unitOfWork, IMapper mapper)
+        public StaffService(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<StoreHub> hubContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _hubContext = hubContext;
         }
 
 

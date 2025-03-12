@@ -7,6 +7,7 @@ using StoreManager.Configurations;
 using StoreManager.Data;
 using StoreManager.Data.Repositories;
 using StoreManager.Data.UnitOfWork;
+using StoreManager.Hubs;
 using StoreManager.Services;
 using System.Text;
 
@@ -44,6 +45,10 @@ builder.Services.AddScoped<ITableService, TableService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+//register the SignalIr service
+builder.Services.AddSignalR();
+
+//register the Jwt settings
 // read the Jwt settings from the appsettings.json
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
@@ -68,11 +73,12 @@ builder.Services.AddAuthorization();
 
 // Thêm Swagger vào DI Container
 builder.Services.AddEndpointsApiExplorer();
+//
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Restaurant API", Version = "v1" });
 
-    // Cấu hình Swagger để nhập JWT Token
+    // configure swagger to use the jwt token
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -115,5 +121,6 @@ app.UseAuthorization();
 
 
 app.MapControllers();
+app.MapHub<StoreHub>("/Hubs"); // add the endpoint for the SignalR hub
 
 app.Run();

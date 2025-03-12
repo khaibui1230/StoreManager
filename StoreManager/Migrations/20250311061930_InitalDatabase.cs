@@ -185,7 +185,7 @@ namespace StoreManager.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_MenuItemId1",
                 table: "OrderItems",
-                column: "MenuItemId1");
+                column: "MenuItemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",

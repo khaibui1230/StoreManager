@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using StoreManager.Data.UnitOfWork;
 using StoreManager.DTOs;
+using StoreManager.Hubs;
 using StoreManager.Model;
 
 namespace StoreManager.Services
@@ -9,12 +11,15 @@ namespace StoreManager.Services
     {
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
+        private readonly IHubContext<StoreHub> _hubContext;
 
-        public MenuService(IUnitOfWork unitOfWork, IMapper mapper)
+        public MenuService(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<StoreHub> hubContext  )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _hubContext = hubContext;
         }
+
 
         public async Task<MenuItemDto> AddMenuItemAsync(MenuItemDto menuItemDto)
         {
@@ -23,8 +28,12 @@ namespace StoreManager.Services
             // add the menuItem to the database
             await _unitOfWork.MenuRepository.AddAsync(menuItem);
             await _unitOfWork.SaveAsync();
+
+            // send message to all clients
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate", "New Menu has been added");
             // trang the meuItem to menuItemDto
             return _mapper.Map<MenuItemDto>(menuItem);
+            
 
         }
 
@@ -37,6 +46,9 @@ namespace StoreManager.Services
             }
             await _unitOfWork.MenuRepository.DeleteAsync(id); // delete the menuItem    
             await _unitOfWork.SaveAsync();
+
+            // send message to all clients
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate", "Menu has been deleted");
             return true;
 
 
@@ -70,6 +82,9 @@ namespace StoreManager.Services
             _mapper.Map(menuItemDto, menuItemExist);
             await _unitOfWork.MenuRepository.UpdateAsync(menuItemExist);
             await _unitOfWork.SaveAsync();
+
+            // send message to all clients
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate", "Menu has been updated");
             // return the DTO of the menuItem has updated
             return _mapper.Map<MenuItemDto>(menuItemExist);
         }

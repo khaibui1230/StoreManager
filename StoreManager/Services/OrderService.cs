@@ -1,14 +1,19 @@
-﻿using StoreManager.Data.UnitOfWork;
+﻿using Microsoft.AspNetCore.SignalR;
+using StoreManager.Data.UnitOfWork;
 using StoreManager.DTOs;
+using StoreManager.Hubs;
 using StoreManager.Model;
 
 public class OrderService : IOrderService
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public OrderService(IUnitOfWork unitOfWork)
+    public IHubContext<StoreHub> _hubContext { get; }
+
+    public OrderService(IUnitOfWork unitOfWork, IHubContext<StoreHub> hubContext)
     {
         _unitOfWork = unitOfWork;
+        _hubContext = hubContext;
     }
 
     public async Task<IEnumerable<OrderDto>> GetAllOrdersAsync()
@@ -24,7 +29,7 @@ public class OrderService : IOrderService
         return MapToDto(order);
     }
 
-    public async Task<OrderDto> CreateOrderAsync(OrderDto orderDto)
+    public async Task<OrderDto> AddOrderAsync(OrderDto orderDto)
     {
         var order = new Order
         {
@@ -43,6 +48,9 @@ public class OrderService : IOrderService
 
         await _unitOfWork.OrderRepository.AddAsync(order);
         await _unitOfWork.SaveAsync();
+
+        //send message to all clients   
+        await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate", "New order has been added");
 
         return await GetOrderByIdAsync(order.Id);
     }
@@ -69,12 +77,19 @@ public class OrderService : IOrderService
 
         await _unitOfWork.OrderRepository.UpdateAsync(order);
         await _unitOfWork.SaveAsync();
+
+        //send message to all clients
+        await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate", "Order has been updated");
     }
+
+    
 
     public async Task DeleteOrderAsync(int id)
     {
         await _unitOfWork.OrderRepository.DeleteAsync(id);
         await _unitOfWork.SaveAsync();
+        //send message to all clients   
+        await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate", "The order has been delete");
     }
 
     private OrderDto MapToDto(Order order)
