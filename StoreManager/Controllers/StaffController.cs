@@ -20,14 +20,14 @@ namespace StoreManager.Controllers
             this.staffService = staffService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllStaffsAsync()
+        public async Task<IActionResult> GetAllStaffs()
         {
             var staffs = await staffService.GetAllStaffsAsync();
             return Ok(staffs);
         }
         [HttpGet("{id}")]
         [ActionName("GetStaffById")] //
-        public async Task<IActionResult> GetStaffByIdAsync(int id)
+        public async Task<IActionResult> GetStaffById(int id)
         {
             var staff = await staffService.GetStaffByIdAsync(id);
             if (staff == null)
@@ -52,7 +52,7 @@ namespace StoreManager.Controllers
             }
 
             Console.WriteLine($"New staff ID: {newStaff.Id}"); // Debug
-            return CreatedAtAction("GetStaffById", new { id = newStaff.Id }, newStaff);
+            return CreatedAtAction(nameof(GetStaffById), new { id = newStaff.Id }, newStaff);
         }
 
         [HttpPut("{id}")]

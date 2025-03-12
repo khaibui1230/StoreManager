@@ -25,7 +25,7 @@ namespace StoreManager.Controllers
         }
         [HttpGet("{id}")]
         [ActionName("GetCusById")]
-        public async Task<IActionResult> GetCusByIdAsync(int id)
+        public async Task<IActionResult> GetCusById(int id)
         {
             var customer = await customerService.GetByIdAsync(id);
             if (customer == null)
@@ -42,7 +42,7 @@ namespace StoreManager.Controllers
             {
                 return BadRequest("Can not create Customer");
             }
-            return CreatedAtAction(nameof(GetCusByIdAsync), new { id = customer.Id }, customer);
+            return CreatedAtAction(nameof(GetCusById), new { id = customer.Id }, customer);
 
         }
         [HttpPut("{id}")]
