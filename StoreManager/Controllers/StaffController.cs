@@ -26,6 +26,7 @@ namespace StoreManager.Controllers
             return Ok(staffs);
         }
         [HttpGet("{id}")]
+        [ActionName("GetStaffById")] //
         public async Task<IActionResult> GetStaffByIdAsync(int id)
         {
             var staff = await staffService.GetStaffByIdAsync(id);

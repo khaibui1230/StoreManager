@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StoreManager.Data;
 
@@ -11,9 +12,11 @@ using StoreManager.Data;
 namespace StoreManager.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    partial class RestaurantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250312072909_Init_CustomerTable")]
+    partial class Init_CustomerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,32 +52,6 @@ namespace StoreManager.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "Ho Chi Minh City",
-                            Email = "john.doe@example.com",
-                            Name = "John Doe",
-                            PhoneNumber = "123-456-7890"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Address = "Ho Chi Minh City",
-                            Email = "jane.smith@example.com",
-                            Name = "Jane Smith",
-                            PhoneNumber = "098-765-4321"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Address = "Ho Chi Minh City",
-                            Email = "alice.johnson@example.com",
-                            Name = "Alice Johnson",
-                            PhoneNumber = "555-555-5555"
-                        });
                 });
 
             modelBuilder.Entity("StoreManager.Model.MenuItem", b =>
@@ -148,7 +125,7 @@ namespace StoreManager.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("OrderDate")
@@ -186,7 +163,6 @@ namespace StoreManager.Migrations
                         new
                         {
                             Id = 1,
-                            CustomerId = 1,
                             OrderDate = new DateTime(2025, 3, 10, 9, 30, 0, 0, DateTimeKind.Utc),
                             StaffId = 2,
                             Status = "Pending",
@@ -196,7 +172,6 @@ namespace StoreManager.Migrations
                         new
                         {
                             Id = 2,
-                            CustomerId = 2,
                             OrderDate = new DateTime(2025, 3, 10, 10, 15, 0, 0, DateTimeKind.Utc),
                             StaffId = 4,
                             Status = "Completed",
@@ -206,7 +181,6 @@ namespace StoreManager.Migrations
                         new
                         {
                             Id = 3,
-                            CustomerId = 3,
                             OrderDate = new DateTime(2025, 3, 10, 12, 0, 0, 0, DateTimeKind.Utc),
                             StaffId = 5,
                             Status = "Pending",
@@ -399,11 +373,9 @@ namespace StoreManager.Migrations
 
             modelBuilder.Entity("StoreManager.Model.Order", b =>
                 {
-                    b.HasOne("StoreManager.Model.Customer", "Customer")
+                    b.HasOne("StoreManager.Model.Customer", null)
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CustomerId");
 
                     b.HasOne("StoreManager.Model.Staff", "Staff")
                         .WithMany()
@@ -420,8 +392,6 @@ namespace StoreManager.Migrations
                         .HasForeignKey("TableId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Customer");
 
                     b.Navigation("Staff");
 

@@ -11,6 +11,7 @@ namespace StoreManager.Data.UnitOfWork
         public IStaffRepository StaffRepository { get; }
         public ITableRepository TableRepository { get; }
 
+        public ICustomerRepository CustomerRepository { get;}
 
         public UnitOfWork(RestaurantDbContext dbContext)
         {
@@ -19,6 +20,7 @@ namespace StoreManager.Data.UnitOfWork
             OrderRepository = new OrderRepository(dbContext);
             StaffRepository = new StaffRepository(dbContext);
             TableRepository = new TableRepository(dbContext);
+            CustomerRepository = new CustomerRepository(dbContext);
         }
 
        

@@ -11,6 +11,9 @@ namespace StoreManager.Model
         public Table Table { get; set; } // Liên kết với bảng Table
         public int StaffId { get; set; }
         public Staff Staff { get; set; } // Liên kết với bảng Staff
+
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; } // lieen ket voi bang Customer
         public DateTime OrderDate { get; set; }
         public decimal TotalAmount { get; set; }
         public string Status { get; set; } // Ví dụ: "Pending", "Completed", "Cancelled"

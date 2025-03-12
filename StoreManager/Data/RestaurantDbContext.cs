@@ -12,6 +12,7 @@ namespace StoreManager.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Table> Tables { get; set; }
         public DbSet<Staff> Staffs { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,7 +40,12 @@ namespace StoreManager.Data
                 .WithMany()
                 .HasForeignKey(oi => oi.MenuItemId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+            // Cấu hình quan hệ
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Customer)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Seed data
             SeedData(modelBuilder);
@@ -82,6 +88,7 @@ namespace StoreManager.Data
                     OrderDate = new DateTime(2025, 3, 10, 9, 30, 0, DateTimeKind.Utc),
                     TableId = 1,
                     StaffId = 2,
+                    CustomerId = 1, // add the new CusId property
                     Status = "Pending"
                 },
                 new Order
@@ -90,6 +97,7 @@ namespace StoreManager.Data
                     OrderDate = new DateTime(2025, 3, 10, 10, 15, 0, DateTimeKind.Utc),
                     TableId = 2,
                     StaffId = 4,
+                    CustomerId = 2, // add the new CusId property
                     Status = "Completed"
                 },
                 new Order
@@ -98,6 +106,7 @@ namespace StoreManager.Data
                     OrderDate = new DateTime(2025, 3, 10, 12, 0, 0, DateTimeKind.Utc),
                     TableId = 3,
                     StaffId = 5,
+                    CustomerId = 3,
                     Status = "Pending"
                 }
             );
@@ -109,6 +118,34 @@ namespace StoreManager.Data
                 new OrderItem { Id = 3, OrderId = 2, MenuItemId = 2, Quantity = 3 }, // 3 Trà sữa
                 new OrderItem { Id = 4, OrderId = 3, MenuItemId = 5, Quantity = 1 }, // 1 Phở bò
                 new OrderItem { Id = 5, OrderId = 3, MenuItemId = 4, Quantity = 2 }  // 2 Nước cam
+            );
+            // Seed data for Customer
+            modelBuilder.Entity<Customer>().HasData(
+                new Customer
+                {
+                    Id = 1,
+                    Name = "John Doe",
+                    PhoneNumber = "123-456-7890",
+                    Email = "john.doe@example.com",
+                    Address = "Ho Chi Minh City"
+                },
+                new Customer
+                {
+                    Id = 2,
+                    Name = "Jane Smith",
+                    PhoneNumber = "098-765-4321",
+                    Email = "jane.smith@example.com",
+                    Address = "Ho Chi Minh City"
+                },
+                new Customer
+                {
+                    Id = 3,
+                    Name = "Alice Johnson",
+                    PhoneNumber = "555-555-5555",
+                    Email = "alice.johnson@example.com",
+                    Address = "Ho Chi Minh City"
+
+                }
             );
         }
     }

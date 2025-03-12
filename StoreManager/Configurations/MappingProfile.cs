@@ -14,6 +14,7 @@ namespace StoreManager.Configurations
             CreateMap<OrderItem, OrderItemDto>().ReverseMap();
             CreateMap<Table, TableDto>().ReverseMap();
             CreateMap<Staff, StaffDto>().ReverseMap();
+            CreateMap<Customer, CustomerDto>().ReverseMap();
         }
 
     }

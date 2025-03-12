@@ -8,6 +8,7 @@ namespace StoreManager.Data.UnitOfWork
         IOrderRepository OrderRepository { get; }
         IStaffRepository StaffRepository { get; }
         IMenuRepository MenuRepository { get; } 
+        ICustomerRepository CustomerRepository { get; }
         Task<int> SaveAsync();
     }
 }
