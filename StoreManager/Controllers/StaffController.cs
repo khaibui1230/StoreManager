@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreManager.DTOs;
 using StoreManager.Model;
@@ -6,6 +7,7 @@ using StoreManager.Services;
 
 namespace StoreManager.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StaffController : ControllerBase
@@ -34,6 +36,7 @@ namespace StoreManager.Controllers
             return Ok(staff);
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddStaffAsync(StaffDto staffDto)
         {
             if (staffDto == null || !ModelState.IsValid)
@@ -68,6 +71,7 @@ namespace StoreManager.Controllers
             return NoContent();
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles="Admin")]
         public async Task<IActionResult> DeleteStaffAsync(int id)
         {
             var deletedStaff = await staffService.DeleteStaffAsync(id);

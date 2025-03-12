@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreManager.DTOs;
 using StoreManager.Model;
@@ -6,6 +7,7 @@ using StoreManager.Services;
 
 namespace StoreManager.Controllers
 {
+    [Authorize]
     [Route("api/menu")]
     [ApiController]
     public class MenuController : ControllerBase
